@@ -31,6 +31,7 @@ export default function Dashboard() {
             <nav className="flex flex-col space-y-4">
               <a href="/dashboard">Dashboard</a>
               <a href="/dashboard/inventory">Inventory</a>
+              <a href="/dashboard/cropAI">cropAI</a>
               <a href="/dashboard/orders">Orders</a>
               <a href="/dashboard/analytics">Analytics</a>
               <a href="/dashboard/marketplace">Marketplace</a>

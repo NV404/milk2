@@ -30,7 +30,7 @@ const TeachableMachine = () => {
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
-      const imageUrl = window.URL.createObjectURL(file); // Correct URL reference
+      const imageUrl = window.URL.createObjectURL(file);
       setUploadedImage(imageUrl);
       predict(imageUrl);
     }
@@ -61,28 +61,39 @@ const TeachableMachine = () => {
   };
 
   return (
-    <div>
-      <h1>Teachable Machine Image Model - Upload Image</h1>
+    <div className="flex flex-col items-center p-6 space-y-6 bg-gray-100 min-h-screen">
+      <h1 className="text-3xl font-bold text-gray-800">
+        Teachable Machine Image Model
+      </h1>
 
       {/* File input for image upload */}
-      <input type="file" accept="image/*" onChange={handleImageUpload} />
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleImageUpload}
+        className="px-4 py-2 bg-blue-500 text-white rounded-md cursor-pointer hover:bg-blue-600"
+      />
 
       {/* Display uploaded image */}
       {uploadedImage && (
-        <div>
+        <div className="mt-4">
           <img
             src={uploadedImage}
             alt="Uploaded"
-            style={{ maxWidth: "400px" }}
+            className="w-96 max-w-full rounded shadow-md"
           />
         </div>
       )}
 
       {/* Display predictions */}
-      <div id="label-container">
+      <div id="label-container" className="mt-4 space-y-2">
         {predictions.map((pred, index) => (
-          <div key={index}>
-            {pred.className}: {pred.probability.toFixed(2)}
+          <div
+            key={index}
+            className="bg-white p-4 rounded shadow-md text-gray-700 text-lg flex justify-between w-80"
+          >
+            <span>{pred.className}</span>
+            <span>{(pred.probability * 100).toFixed(2)}%</span>
           </div>
         ))}
       </div>
