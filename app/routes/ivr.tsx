@@ -58,7 +58,7 @@ const AndroidDialer = () => {
     } else if (ButtonText === "1") {
       setLanguageSelected("hindi");
       startIvrSystem(
-        "आपने हिंदी चुनी है। आर्डर मैनेजमेंट के लिए 1, गोवेर्मेंट स्कीम के लिए 2, मार्किट ट्रेंड्स के लिए 3 दबाएं।"
+        "आपने हिंदी चुनी है। आर्डर मैनेजमेंट के लिए 1 दबाएं।, गोवेर्मेंट स्कीम के लिए 2 दबाएं।, मार्किट ट्रेंड्स के लिए 3 दबाएं।"
       );
     } else {
       startIvrSystem("Invalid input. Press 1 for Hindi, 2 for English.");

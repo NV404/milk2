@@ -217,10 +217,10 @@ const assets = [
   "/logo-light.png",
   "/logo.png",
   "/manifest.json",
+  "/icons/RemixPWA.png",
   "/models/metadata.json",
   "/models/model.json",
-  "/models/weights.bin",
-  "/icons/RemixPWA.png"
+  "/models/weights.bin"
 ];
 const routes = {
   "root": {
