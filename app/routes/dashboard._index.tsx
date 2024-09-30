@@ -69,29 +69,9 @@ const EnhancedFarmerDashboard = () => {
               </TabsList>
               <TabsContent value="today">
                 <p className="text-2xl font-bold mb-2">₹27,980.24</p>
-                {/* <p className="text-sm text-muted-foreground">
-                  Available Balance
-                </p> */}
-                {/* <div className="mt-4">
-              <p className="text-sm font-medium">Monthly Goal</p>
-              <Progress value={75} className="mt-2" />
-              <p className="text-sm text-muted-foreground mt-1">
-                ₹21,000 / ₹28,000
-              </p>
-            </div> */}
               </TabsContent>
               <TabsContent value="all">
                 <p className="text-2xl font-bold mb-2">₹27,980.24</p>
-                {/* <p className="text-sm text-muted-foreground">
-                  Available Balance
-                </p> */}
-                {/* <div className="mt-4">
-              <p className="text-sm font-medium">Monthly Goal</p>
-              <Progress value={75} className="mt-2" />
-              <p className="text-sm text-muted-foreground mt-1">
-                ₹21,000 / ₹28,000
-              </p>
-            </div> */}
               </TabsContent>
             </Tabs>
           </CardContent>
@@ -236,46 +216,6 @@ const EnhancedFarmerDashboard = () => {
           </ResponsiveContainer>
         </CardContent>
       </Card>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Upcoming Events</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2">
-              <li className="flex items-center">
-                <Calendar className="h-4 w-4 mr-2" />
-                <span>Local Farmer's Market - June 15</span>
-              </li>
-              <li className="flex items-center">
-                <Calendar className="h-4 w-4 mr-2" />
-                <span>Crop Insurance Seminar - June 20</span>
-              </li>
-              <li className="flex items-center">
-                <Calendar className="h-4 w-4 mr-2" />
-                <span>Agricultural Tech Workshop - June 25</span>
-              </li>
-            </ul>
-            <Button variant="outline" className="w-full mt-4">
-              View All Events
-            </Button>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 gap-2">
-              <Button>Add New Crop</Button>
-              <Button>Request Transport</Button>
-              <Button>Apply for Loan</Button>
-              <Button>Contact Support</Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
 
       <Card>
         <CardHeader>

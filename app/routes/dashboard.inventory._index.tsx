@@ -53,7 +53,7 @@ const InventoryPage = () => {
                         {item.quantity} {item.unit}
                       </p>
                       <p className="font-bold text-green-600">
-                        ${item.price.toFixed(2)}
+                        ₹{item.price.toFixed(2)}
                       </p>
                     </div>
                     <ChevronRight className="h-6 w-6 text-gray-400 mr-4" />

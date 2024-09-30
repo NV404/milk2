@@ -5,11 +5,12 @@ import { LoaderFunctionArgs, redirect } from "@remix-run/node";
 import { eq } from "drizzle-orm";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const body = await request.json();
+  const number = new URL(request.url).searchParams.get("number");
+  console.log(number, "number");
   const [user] = await db
     .select()
     .from(users)
-    .where(eq(users.phoneNumber, body?.number));
+    .where(eq(users.phoneNumber, number as string));
 
   return { user: user ? true : false };
 }
