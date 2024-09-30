@@ -86,7 +86,9 @@ export default function Login() {
             backgroundSize: "cover",
           }}
         >
-          <p className="text-center font-bold text-3xl text-white">Gwala</p>
+          <p className="text-center font-bold text-3xl text-white">
+            KrishiKunj
+          </p>
         </div>
         <div className="absolute bottom-0 w-full h-[20vh] z-10 bg-gradient-to-b from-transparent to-purple-150"></div>
       </div>
