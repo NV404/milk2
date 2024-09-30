@@ -49,6 +49,7 @@ export const products = pgTable("products", {
   type: varchar("type", { length: 100 }).notNull(),
   variety: varchar("variety", { length: 100 }),
   price: real("price").notNull(),
+  image: text("image"),
   quantity: integer("quantity").notNull(),
   unit: text("unit"),
   description: text("description"),

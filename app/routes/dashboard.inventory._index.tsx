@@ -40,12 +40,12 @@ const InventoryPage = () => {
           <>
             {allProducts.map((item) => (
               <Card key={item.id} className="mb-4 overflow-hidden">
-                <CardContent className="p-0">
+                <CardContent className="p-0 px-1">
                   <div className="flex items-center">
                     <img
-                      src={""}
+                      src={item.image || ""}
                       alt={item.name}
-                      className="w-20 h-20 object-cover"
+                      className="w-20 h-20 object-cover rounded-sm"
                     />
                     <div className="flex-grow p-3">
                       <h3 className="font-semibold text-lg">{item.name}</h3>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ArrowLeft, Camera } from "lucide-react";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
@@ -15,10 +15,20 @@ import { Form, redirect } from "@remix-run/react";
 import { db } from "@/db/index.server";
 import { products, Users } from "@/db/schema";
 import { getUser } from "@/utils/session.server";
+import { s3Client } from "nodejs-s3-typescript";
+
+const s3Config = {
+  bucketName: process.env.S3_BUCKET as string,
+  region: process.env.S3_REGION as string,
+  accessKeyId: process.env.S3_ACCESS_KEY_ID as string,
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY as string,
+  s3Url: "https://saaskart.s3.us-east-2.amazonaws.com",
+};
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
 
+  var imageS3Url: string = "";
   const name = formData.get("name") as string;
   const quantity = formData.get("quantity") as string;
   const unit = formData.get("unit") as string;
@@ -27,6 +37,20 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const user = (await getUser(request)) as Users;
 
+  try {
+    const file = formData.get("image") as File;
+    const s3 = new s3Client({
+      ...s3Config,
+    });
+    const s3Upload = await s3.uploadFile(
+      Buffer.from(await file.arrayBuffer()),
+      "delete" + name
+    );
+    imageS3Url = s3Upload.location;
+  } catch (e) {
+    console.log(e);
+  }
+
   const product = await db.insert(products).values({
     name,
     price: Number(price),
@@ -34,6 +58,7 @@ export async function action({ request }: ActionFunctionArgs) {
     unit,
     type: "",
     description,
+    image: imageS3Url,
     farmerId: user.id,
   });
 
@@ -44,21 +69,59 @@ export async function action({ request }: ActionFunctionArgs) {
 
 const AddItemPage = () => {
   const units = ["kg", "g", "l", "ml", "piece", "dozen", "bundle"];
+  const [image, setImage] = useState<any>(null);
+
+  const handleImageUpload = (e: any) => {
+    const file = e.target.files[0];
+    if (file) {
+      const fileURL = URL.createObjectURL(file);
+      setImage(fileURL);
+    }
+  };
 
   return (
     <div className="min-h-screen">
       <div>
-        <div className="mb-6 flex justify-center">
-          <Button
-            variant="outline"
-            className="w-32 h-32 rounded-full border-dashed border-2 border-gray-300 flex flex-col items-center justify-center"
-          >
-            <Camera className="h-8 w-8 text-gray-400 mb-2" />
-            <span className="text-sm text-gray-500">Add Photo</span>
-          </Button>
-        </div>
-
-        <Form method="post" className="space-y-4">
+        <Form method="post" className="space-y-4" encType="multipart/form-data">
+          <div className="mb-4 flex flex-col items-center lg:flex-row">
+            <Label className="mb-2 block w-full text-sm font-medium text-gray-700 lg:w-1/3">
+              Image
+            </Label>
+            <div className="flex w-full items-center lg:w-2/3">
+              <div className="flex h-24 w-24 flex-shrink-0 items-center justify-center overflow-hidden rounded-md bg-gray-200 p-2">
+                {image ? (
+                  <img
+                    // className="h-full w-full object-contain"
+                    src={image}
+                    alt="Uploaded"
+                  ></img>
+                ) : (
+                  <p>No Image</p>
+                )}
+              </div>
+              <div className="ml-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  asChild
+                  className="mb-2"
+                >
+                  <label htmlFor="imageUpload" className="cursor-pointer">
+                    Choose Image
+                  </label>
+                </Button>
+                <input
+                  className="hidden cursor-pointer bg-slate-200"
+                  type="file"
+                  accept="image/*"
+                  name="image"
+                  onChange={handleImageUpload}
+                  id="imageUpload"
+                />
+                <p className="text-xs text-gray-500">SVG, PNG, JPG</p>
+              </div>
+            </div>
+          </div>
           <div className="space-y-2">
             <Label htmlFor="name" className="font-semibold text-gray-700">
               Name
