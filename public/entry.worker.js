@@ -201,6 +201,7 @@ const assets = [
   "/favicon.ico",
   "/logo-dark.png",
   "/logo-light.png",
+  "/logo.png",
   "/manifest.json",
   "/icons/RemixPWA.png"
 ];
