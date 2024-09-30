@@ -53,12 +53,12 @@ const AndroidDialer = () => {
     if (ButtonText === "2") {
       setLanguageSelected("english");
       startIvrSystem(
-        "You have selected English. Press 1 for seeds, 2 for fertilizers, 3 for grains."
+        "You have selected English. Press 1 for Order Management, 2 for Government Schemes, 3 for Market Trends."
       );
     } else if (ButtonText === "1") {
       setLanguageSelected("hindi");
       startIvrSystem(
-        "आपने हिंदी चुनी है। बीज के लिए 1, उर्वरक के लिए 2, अनाज के लिए 3 दबाएं।"
+        "आपने हिंदी चुनी है। आर्डर मैनेजमेंट के लिए 1, गोवेर्मेंट स्कीम के लिए 2, मार्किट ट्रेंड्स के लिए 3 दबाएं।"
       );
     } else {
       startIvrSystem("Invalid input. Press 1 for Hindi, 2 for English.");
@@ -68,8 +68,8 @@ const AndroidDialer = () => {
   const handleMenuSelection = (ButtonText) => {
     const options = {
       "1": "Order Management",
-      "2": "Market Trends",
-      "3": "Government Schemes",
+      "2": "Government Schemes",
+      "3": "Market Trends",
       "4": "Product Listing",
       "5": "Seeds",
       "6": "Payment Issue",
@@ -86,6 +86,9 @@ const AndroidDialer = () => {
         languageSelected === "english"
           ? `You selected ${options[ButtonText]}.`
           : `आपने ${options[ButtonText]} चुना।`;
+      if (ButtonText === "2") {
+        handleConfirmation("1");
+      }
       startIvrSystem(message);
     } else {
       startIvrSystem("Invalid input. Please try again.");
@@ -104,8 +107,8 @@ const AndroidDialer = () => {
       setSelectedOption("");
       const message =
         languageSelected === "english"
-          ? ""
-          : "ऑर्डर रद्द। बीज के लिए 1, उर्वरक के लिए 2, अनाज के लिए 3 दबाएं।";
+          ? "Pradhan Mantri Krishi Sinchai Yojana (PMKSY), Uttarakhand Krishi Vikas Bank Uttarakhand, Organic Farming Policy, Pradhan Mantri Fasal Bima Yojana (PMFBY), Soil Health Card Scheme"
+          : "प्रधान मंत्री कृषि सिंचाई योजना, उत्तराखंड कृषि विकास बैंक उत्तराखंड, जैविक खेती नीति, प्रधान मंत्री फसल बीमा योजना, मृदा स्वास्थ्य कार्ड योजना";
       startIvrSystem(message);
     } else {
       startIvrSystem("Invalid input. Please try again.");

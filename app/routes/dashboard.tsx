@@ -38,6 +38,9 @@ export default function Dashboard() {
               <a href="/dashboard/learning">Learning Center</a>
               <a href="/dashboard/community">Farmer Community</a>
               <a href="/dashboard/support">Support</a>
+              <a href="/ivr" className="text-white">
+                ivr
+              </a>
             </nav>
           </SheetContent>
         </Sheet>
