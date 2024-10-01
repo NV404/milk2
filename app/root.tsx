@@ -4,9 +4,10 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useNavigation,
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
-
+import TopBarProgress from "react-topbar-progress-indicator";
 import styles from "./tailwind.css?url";
 
 export const links: LinksFunction = () => [
@@ -24,6 +25,15 @@ export const links: LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const navigate = useNavigation();
+
+  TopBarProgress.config({
+    barColors: {
+      "0": "#000",
+      "1.0": "#000",
+    },
+  });
+
   return (
     <html lang="en">
       <head>
@@ -34,6 +44,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
+        {(navigate.state == "loading" || navigate.state == "submitting") && (
+          <TopBarProgress />
+        )}
         {children}
         <ScrollRestoration />
         <Scripts />

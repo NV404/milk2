@@ -50,6 +50,7 @@ export const products = pgTable("products", {
   variety: varchar("variety", { length: 100 }),
   price: real("price").notNull(),
   image: text("image"),
+  isBidding: boolean("is_bidding").notNull().default(false),
   quantity: integer("quantity").notNull(),
   unit: text("unit"),
   description: text("description"),
@@ -99,6 +100,19 @@ export const reviews = pgTable("reviews", {
 
 export type Reviews = InferSelectModel<typeof reviews>;
 export type ReviewsInsert = InferInsertModel<typeof reviews>;
+
+export const bids = pgTable("bids", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  productId: uuid("product_id").references(() => products.id),
+  bidderId: uuid("bidder_id").references(() => users.id),
+  amount: real("amount").notNull(),
+  status: varchar("status", { length: 50 }).notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export type Bids = InferSelectModel<typeof bids>;
+export type BidsInsert = InferInsertModel<typeof bids>;
 
 // CropCalendar table
 export const cropCalendar = pgTable("crop_calendar", {
@@ -154,12 +168,14 @@ export const usersRelations = relations(users, ({ many }) => ({
   products: many(products),
   orders: many(orders),
   reviews: many(reviews),
+  bids: many(bids),
 }));
 
 export const productsRelations = relations(products, ({ one, many }) => ({
   farmer: one(users, { fields: [products.farmerId], references: [users.id] }),
   orderItems: many(orderItems),
   reviews: many(reviews),
+  bids: many(bids),
 }));
 
 export const ordersRelations = relations(orders, ({ one, many }) => ({
@@ -183,5 +199,16 @@ export const reviewsRelations = relations(reviews, ({ one }) => ({
   product: one(products, {
     fields: [reviews.productId],
     references: [products.id],
+  }),
+}));
+
+export const bidsRelations = relations(bids, ({ one }) => ({
+  product: one(products, {
+    fields: [bids.productId],
+    references: [products.id],
+  }),
+  bidder: one(users, {
+    fields: [bids.bidderId],
+    references: [users.id],
   }),
 }));

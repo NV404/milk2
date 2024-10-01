@@ -39,6 +39,7 @@
     "react-dom": "^18.2.0",
     "react-google-map-picker": "^1.2.3",
     "react-google-maps": "^9.4.5",
+    "react-topbar-progress-indicator": "^4.1.1",
     "recharts": "^2.12.7",
     "recompose": "^0.30.0",
     "remix-utils": "^7.7.0",

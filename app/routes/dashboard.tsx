@@ -33,11 +33,11 @@ export default function Dashboard() {
               <a href="/dashboard/inventory">Inventory</a>
               <a href="/dashboard/cropAI">cropAI</a>
               <a href="/dashboard/orders">Orders</a>
-              <a href="/dashboard/analytics">Analytics</a>
+              {/* <a href="/dashboard/analytics">Analytics</a>
               <a href="/dashboard/marketplace">Marketplace</a>
               <a href="/dashboard/learning">Learning Center</a>
               <a href="/dashboard/community">Farmer Community</a>
-              <a href="/dashboard/support">Support</a>
+              <a href="/dashboard/support">Support</a> */}
               <a href="/ivr" className="text-white">
                 ivr
               </a>
