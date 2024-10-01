@@ -119,13 +119,26 @@ const AndroidDialer = () => {
         : `आपने ${selectedOption} चुना है। अधिक जानकारी के लिए कृपया हमारी वेबसाइट पर जाएं।`;
     startIvrSystem(message);
   };
+  const handleOrderManagement = async () => {
+    try {
+      const response = await fetch("/api/order", {
+        method: "GET", // Use 'POST' if your API requires it
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-  const handleOrderManagement = () => {
-    const message =
-      languageSelected === "english"
-        ? "Your order 03120 is Shipped, Your order 01712 is still processing. Thank you!"
-        : "आपका ऑर्डर 03120 भेज दिया गया है। आपका ऑर्डर 01712 अभी भी प्रक्रिया में है। धन्यवाद!";
-    startIvrSystem(message);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json(); // Parse the JSON data
+      const message =
+        languageSelected === "english" ? data.data.english : data.data.hindi;
+      startIvrSystem(message);
+    } catch (error) {
+      console.error("Error fetching order data:", error);
+    }
   };
 
   const handleConfirmation = (ButtonText) => {
