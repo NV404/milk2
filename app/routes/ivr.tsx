@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Phone, X, Mic, MicOff, PhoneCallIcon, PhoneCall } from "lucide-react";
-import { Button } from "~/components/ui/button";
 
 const AndroidDialer = () => {
   const [displayValue, setDisplayValue] = useState("");
@@ -70,46 +69,68 @@ const AndroidDialer = () => {
       "1": "Order Management",
       "2": "Government Schemes",
       "3": "Market Trends",
-      "4": "Product Listing",
-      "5": "Seeds",
-      "6": "Payment Issue",
-      "7": "fertilizers",
-      "8": "grains",
-      "9": "Logistic",
-      "0": "Feedback",
     };
-    if (
-      ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"].includes(ButtonText)
-    ) {
+    if (["1", "2", "3"].includes(ButtonText)) {
       setSelectedOption(options[ButtonText]);
       const message =
         languageSelected === "english"
           ? `You selected ${options[ButtonText]}.`
           : `आपने ${options[ButtonText]} चुना।`;
-      if (ButtonText === "2") {
-        handleConfirmation("1");
+      if (options[ButtonText] === "Order Management") {
+        handleOrderManagement();
+      } else if (options[ButtonText] === "Government Schemes") {
+        const governmentPolicyMessage =
+          languageSelected === "english"
+            ? "You have selected Government Schemes. Press 1 for Pradhan Mantri Awas Yojana, 2 for Pradhan Mantri Jan-Dhan Yojana, 3 for Pradhan Mantri Ujjwala Yojana."
+            : "आपने सरकारी योजना चुनी है। प्रधानमंत्री आवास योजना के लिए 1 दबाएं। प्रधानमंत्री जन-धन योजना के लिए 2 दबाएं। प्रधानमंत्री उज्ज्वला योजना के लिए 3 दबाएं।";
+        startIvrSystem(governmentPolicyMessage);
+        handleGovernmentPolicySelection(ButtonText);
+      } else {
+        startIvrSystem(message);
       }
+    } else {
+      startIvrSystem("Invalid input. Please try again.");
+    }
+  };
+
+  const handleGovernmentPolicySelection = (ButtonText) => {
+    const options = {
+      "1": "Pradhan Mantri Awas Yojana",
+      "2": "Pradhan Mantri Jan-Dhan Yojana",
+      "3": "Pradhan Mantri Ujjwala Yojana",
+    };
+    if (["1", "2", "3"].includes(ButtonText)) {
+      setSelectedOption(options[ButtonText]);
+      const message =
+        languageSelected === "english"
+          ? `You selected ${options[ButtonText]}. For more information, please visit our website.`
+          : `आपने ${options[ButtonText]} चुना है। अधिक जानकारी के लिए कृपया हमारी वेबसाइट पर जाएं।`;
+      handleGovernmentPolicy(options[ButtonText]);
       startIvrSystem(message);
     } else {
       startIvrSystem("Invalid input. Please try again.");
     }
   };
 
+  const handleGovernmentPolicy = (selectedOption) => {
+    const message =
+      languageSelected === "english"
+        ? `You have selected ${selectedOption}. For more information, please visit our website.`
+        : `आपने ${selectedOption} चुना है। अधिक जानकारी के लिए कृपया हमारी वेबसाइट पर जाएं।`;
+    startIvrSystem(message);
+  };
+
+  const handleOrderManagement = () => {
+    const message =
+      languageSelected === "english"
+        ? "Your order 03120 is Shipped, Your order 01712 is still processing. Thank you!"
+        : "आपका ऑर्डर 03120 भेज दिया गया है। आपका ऑर्डर 01712 अभी भी प्रक्रिया में है। धन्यवाद!";
+    startIvrSystem(message);
+  };
+
   const handleConfirmation = (ButtonText) => {
-    if (ButtonText === "1") {
-      const message =
-        languageSelected === "english"
-          ? "Your order 03120 is Shipped. Your order 71002 is still processing. Thank you!"
-          : "आपका ऑर्डर 03120 भेज दिया गया है। आपका ऑर्डर 71002 अभी भी प्रोसेस हो रहा है। धन्यवाद!";
-      startIvrSystem(message);
-      setTimeout(endCall, 3000);
-    } else if (ButtonText === "2") {
-      setSelectedOption("");
-      const message =
-        languageSelected === "english"
-          ? "Pradhan Mantri Krishi Sinchai Yojana (PMKSY), Uttarakhand Krishi Vikas Bank Uttarakhand, Organic Farming Policy, Pradhan Mantri Fasal Bima Yojana (PMFBY), Soil Health Card Scheme"
-          : "प्रधान मंत्री कृषि सिंचाई योजना, उत्तराखंड कृषि विकास बैंक उत्तराखंड, जैविक खेती नीति, प्रधान मंत्री फसल बीमा योजना, मृदा स्वास्थ्य कार्ड योजना";
-      startIvrSystem(message);
+    if (selectedOption === "Order Management") {
+      handleOrderManagement();
     } else {
       startIvrSystem("Invalid input. Please try again.");
     }
@@ -191,124 +212,151 @@ const AndroidDialer = () => {
       {showDialpad && (
         <div className="flex flex-col justify-end">
           <div className="flex justify-between mb-4 px-6">
-            <Button
+            <button
               onClick={() => handleKeypadClick("1")}
-              className="bg-black rounded-full w-20 h-20 flex items-center justify-center text-3xl font-semibold text-white hover:bg-blue-500 transition-colors"
+              className="bg-black rounded-full w-20 h-20 flex items-center
+justify-center text-3xl font-semibold text-white hover:bg-blue-500
+transition-colors"
             >
               1
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={() => handleKeypadClick("2")}
-              className="bg-black rounded-full w-20 h-20 flex items-center justify-center text-3xl font-semibold text-white hover:bg-blue-500 transition-colors"
+              className="bg-black rounded-full w-20 h-20 flex items-center
+justify-center text-3xl font-semibold text-white hover:bg-blue-500
+transition-colors"
             >
               2
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={() => handleKeypadClick("3")}
-              className="bg-black rounded-full w-20 h-20 flex items-center justify-center text-3xl font-semibold text-white hover:bg-blue-500 transition-colors"
+              className="bg-black rounded-full w-20 h-20 flex items-center
+justify-center text-3xl font-semibold text-white hover:bg-blue-500
+transition-colors"
             >
               3
-            </Button>
+            </button>
           </div>
           <div className="flex justify-between mb-4 px-6">
-            <Button
+            <button
               onClick={() => handleKeypadClick("4")}
-              className="bg-black rounded-full w-20 h-20 flex items-center justify-center text-3xl font-semibold text-white hover:bg-blue-500 transition-colors"
+              className="bg-black rounded-full w-20 h-20 flex items-center
+justify-center text-3xl font-semibold text-white hover:bg-blue-500
+transition-colors"
             >
               4
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={() => handleKeypadClick("5")}
-              className="bg-black rounded-full w-20 h-20 flex items-center justify-center text-3xl font-semibold text-white hover:bg-blue-500 transition-colors"
+              className="bg-black rounded-full w-20 h-20 flex items-center
+justify-center text-3xl font-semibold text-white hover:bg-blue-500
+transition-colors"
             >
               5
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={() => handleKeypadClick("6")}
-              className="bg-black rounded-full w-20 h-20 flex items-center justify-center text-3xl font-semibold text-white hover:bg-blue-500 transition-colors"
+              className="bg-black rounded-full w-20 h-20 flex items-center
+justify-center text-3xl font-semibold text-white hover:bg-blue-500
+transition-colors"
             >
               6
-            </Button>
+            </button>
           </div>
           <div className="flex justify-between mb-4 px-6">
-            <Button
+            <button
               onClick={() => handleKeypadClick("7")}
-              className="bg-black rounded-full w-20 h-20 flex items-center justify-center text-3xl font-semibold text-white hover:bg-blue-500 transition-colors"
+              className="bg-black rounded-full w-20 h-20 flex items-center
+justify-center text-3xl font-semibold text-white hover:bg-blue-500
+transition-colors"
             >
               7
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={() => handleKeypadClick("8")}
-              className="bg-black rounded-full w-20 h-20 flex items-center justify-center text-3xl font-semibold text-white hover:bg-blue-500 transition-colors"
+              className="bg-black rounded-full w-20 h-20 flex items-center
+justify-center text-3xl font-semibold text-white hover:bg-blue-500
+transition-colors"
             >
               8
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={() => handleKeypadClick("9")}
-              className="bg-black rounded-full w-20 h-20 flex items-center justify-center text-3xl font-semibold text-white hover:bg-blue-500 transition-colors"
+              className="bg-black rounded-full w-20 h-20 flex items-center
+justify-center text-3xl font-semibold text-white hover:bg-blue-500
+transition-colors"
             >
               9
-            </Button>
+            </button>
           </div>
           <div className="flex justify-between mb-4 px-6">
-            <Button
+            <button
               onClick={() => handleKeypadClick("*")}
-              className="bg-black rounded-full w-20 h-20 flex items-center justify-center text-3xl font-semibold text-white hover:bg-blue-500 transition-colors"
+              className="bg-black rounded-full w-20 h-20 flex items-center
+justify-center text-3xl font-semibold text-white hover:bg-blue-500
+transition-colors"
             >
               *
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={() => handleKeypadClick("0")}
-              className="bg-black rounded-full w-20 h-20 flex items-center justify-center text-3xl font-semibold text-white hover:bg-blue-500 transition-colors"
+              className="bg-black rounded-full w-20 h-20 flex items-center
+justify-center text-3xl font-semibold text-white hover:bg-blue-500
+transition-colors"
             >
               0
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={() => handleKeypadClick("#")}
-              className="bg-black rounded-full w-20 h-20 flex items-center justify-center text-3xl font-semibold text-white hover:bg-blue-500 transition-colors"
+              className="bg-black rounded-full w-20 h-20 flex items-center
+justify-center text-3xl font-semibold text-white hover:bg-blue-500
+transition-colors"
             >
               #
-            </Button>
+            </button>
           </div>
         </div>
       )}
 
       {callStatus !== "idle" && (
         <div className="w-full py-4 flex justify-center gap-4 bg-gray-800 ">
-          <Button
+          <button
             onClick={toggleMute}
-            className={`rounded-full w-16 h-16 flex items-center justify-center text-white transition-colors ${
-              isMuted ? "bg-red-500" : "bg-gray-500"
-            }`}
+            className={`rounded-full w-16 h-16 flex items-center justify-center
+text-white transition-colors ${isMuted ? "bg-red-500" : "bg-gray-500"}`}
           >
             {isMuted ? <MicOff size={32} /> : <Mic size={32} />}
-          </Button>
+          </button>
 
-          <Button
+          <button
             onClick={toggleDialpad}
-            className="bg-blue-500 rounded-full w-16 h-16 flex items-center justify-center text-white transition-colors"
+            className="bg-blue-500 rounded-full w-16 h-16 flex items-center
+justify-center text-white transition-colors"
           >
             <PhoneCall size={32} />
-          </Button>
+          </button>
 
-          <Button
+          <button
             onClick={endCall}
-            className="bg-red-500 rounded-full w-16 h-16 flex items-center justify-center text-white transition-colors"
+            className="bg-red-500 rounded-full w-16 h-16 flex items-center
+justify-center text-white transition-colors"
           >
             <X size={32} />
-          </Button>
+          </button>
         </div>
       )}
 
       {callStatus === "idle" && (
         // <div className="h-20">
         <div className="w-full py-4 my-4 flex justify-center">
-          <Button
+          <button
             onClick={startCall}
-            className="bg-green-500 rounded-full w-16 h-16 flex items-center justify-center text-white shadow-lg hover:bg-green-600 transition-colors"
+            className="bg-green-500 rounded-full w-16 h-16 flex items-center
+justify-center text-white shadow-lg hover:bg-green-600
+transition-colors"
           >
             <Phone size={32} />
-          </Button>
+          </button>
         </div>
         // </div>
       )}
