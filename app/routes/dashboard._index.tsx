@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -34,6 +34,67 @@ import { Users, products, orders, marketPrices } from "@/db/schema";
 import { useLoaderData } from "@remix-run/react";
 import { db } from "@/db/index.server";
 import { eq, sum, desc } from "drizzle-orm";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
+
+const translations = {
+  en: {
+    welcome: "Welcome",
+    todaysEarning: "Today's Earning",
+    today: "Today",
+    allTime: "All Time",
+    currentInventory: "Current Inventory",
+    manageInventory: "Manage Inventory",
+    pendingOrders: "Pending Orders",
+    viewAllOrders: "View All Orders",
+    marketPrices: "Market Prices",
+    viewFullMarketReport: "View Full Market Report",
+    salesPerformance: "Sales Performance",
+    overview: "Overview",
+    inventory: "Inventory",
+    orders: "Orders",
+    insights: "Insights",
+  },
+  hi: {
+    welcome: "स्वागत है",
+    todaysEarning: "आज की कमाई",
+    today: "आज",
+    allTime: "कुल",
+    currentInventory: "वर्तमान इन्वेंटरी",
+    manageInventory: "इन्वेंटरी प्रबंधित करें",
+    pendingOrders: "लंबित आदेश",
+    viewAllOrders: "सभी आदेश देखें",
+    marketPrices: "बाजार मूल्य",
+    viewFullMarketReport: "पूरी बाजार रिपोर्ट देखें",
+    salesPerformance: "बिक्री प्रदर्शन",
+    overview: "अवलोकन",
+    inventory: "इन्वेंटरी",
+    orders: "आदेश",
+    insights: "अंतर्दृष्टि",
+  },
+  km: {
+    welcome: "स्वागत छ", // Kumaoni translation (approximate)
+    todaysEarning: "आजको कमाई",
+    today: "आज",
+    allTime: "जम्मा",
+    currentInventory: "हालको सामान",
+    manageInventory: "सामान व्यवस्थापन",
+    pendingOrders: "बाँकी आदेश",
+    viewAllOrders: "सबै आदेश हेर्नुहोस्",
+    marketPrices: "बजार मूल्य",
+    viewFullMarketReport: "पूरा बजार रिपोर्ट हेर्नुहोस्",
+    salesPerformance: "बिक्री प्रदर्शन",
+    overview: "अवलोकन",
+    inventory: "सामान",
+    orders: "आदेश",
+    insights: "अन्तर्दृष्टि",
+  },
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = (await getUser(request)) as Users;
@@ -49,7 +110,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     .select({ total: sum(orders.totalAmount) })
     .from(orders)
     .where(eq(orders.consumerId, user.id))
-    .where(eq(orders.createdAt, today))
     .execute();
 
   const inventory = await db
@@ -111,38 +171,50 @@ const EnhancedFarmerDashboard = () => {
     user,
     todayEarnings,
     inventory,
-    pendingorders,
-    marketPricess,
+    pendingOrders,
+    marketPrices,
     salesPerformance,
   } = useLoaderData<typeof loader>();
 
+  const [language, setLanguage] = useState("en");
+  const t = translations[language];
+
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div className="flex justify-between items-center mb-6">
         <CardTitle className="text-xl">
-          Welcome, {user.fullName || "Farmer"}
+          {t.welcome}, {user.fullName || "Farmer"}
         </CardTitle>
+        <Select value={language} onValueChange={setLanguage}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select language" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="en">English</SelectItem>
+            <SelectItem value="hi">हिंदी (Hindi)</SelectItem>
+            <SelectItem value="km">कुमाऊनी (Kumaoni)</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <Card>
           <CardContent>
-            <p className="py-3 mt-2 font-semibold text-xl">Today's Earning</p>
+            <p className="py-3 mt-2 font-semibold text-xl">{t.todaysEarning}</p>
             <Tabs defaultValue="today">
               <TabsList className="w-full">
                 <TabsTrigger value="today" className="w-full">
-                  Today
+                  {t.today}
                 </TabsTrigger>
                 <TabsTrigger value="all" className="w-full">
-                  All Time
+                  {t.allTime}
                 </TabsTrigger>
               </TabsList>
               <TabsContent value="today">
-                <p className="text-2xl font-bold mb-2">
-                  ₹{todayEarnings.toFixed(2)}
-                </p>
+                <p className="text-2xl font-bold mb-2">₹{todayEarnings}</p>
               </TabsContent>
               <TabsContent value="all">
-                <p className="text-2xl font-bold mb-2">
-                  ₹{(todayEarnings * 30).toFixed(2)}
-                </p>
+                <p className="text-2xl font-bold mb-2">₹{todayEarnings}</p>
               </TabsContent>
             </Tabs>
           </CardContent>
@@ -152,16 +224,16 @@ const EnhancedFarmerDashboard = () => {
 
       <Tabs defaultValue="overview" className="mb-6">
         <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="inventory">Inventory</TabsTrigger>
-          <TabsTrigger value="orders">orders</TabsTrigger>
-          <TabsTrigger value="insights">Insights</TabsTrigger>
+          <TabsTrigger value="overview">{t.overview}</TabsTrigger>
+          <TabsTrigger value="inventory">{t.inventory}</TabsTrigger>
+          <TabsTrigger value="orders">{t.orders}</TabsTrigger>
+          <TabsTrigger value="insights">{t.insights}</TabsTrigger>
         </TabsList>
         <TabsContent value="overview">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card>
               <CardHeader>
-                <CardTitle>Current Inventory</CardTitle>
+                <CardTitle>{t.currentInventory}</CardTitle>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2">
@@ -175,17 +247,17 @@ const EnhancedFarmerDashboard = () => {
                   ))}
                 </ul>
                 <Button variant="outline" className="w-full mt-4">
-                  Manage Inventory
+                  {t.manageInventory}
                 </Button>
               </CardContent>
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle>Pending orders</CardTitle>
+                <CardTitle>{t.pendingOrders}</CardTitle>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2">
-                  {pendingorders.map((order: any) => (
+                  {pendingOrders?.map((order: any) => (
                     <li
                       key={order.id}
                       className="flex justify-between items-center"
@@ -196,17 +268,17 @@ const EnhancedFarmerDashboard = () => {
                   ))}
                 </ul>
                 <Button variant="outline" className="w-full mt-4">
-                  View All orders
+                  {t.viewAllOrders}
                 </Button>
               </CardContent>
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle>Market Prices</CardTitle>
+                <CardTitle>{t.marketPrices}</CardTitle>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2">
-                  {marketPricess.map((price) => (
+                  {marketPrices?.map((price) => (
                     <li key={price.cropName} className="flex justify-between">
                       <span>{price.cropName}</span>
                       <span className="flex items-center">
@@ -217,7 +289,7 @@ const EnhancedFarmerDashboard = () => {
                   ))}
                 </ul>
                 <Button variant="outline" className="w-full mt-4">
-                  View Full Market Report
+                  {t.viewFullMarketReport}
                 </Button>
               </CardContent>
             </Card>
@@ -226,7 +298,7 @@ const EnhancedFarmerDashboard = () => {
         <TabsContent value="inventory">
           Inventory management content
         </TabsContent>
-        <TabsContent value="orders">orders management content</TabsContent>
+        <TabsContent value="orders">Orders management content</TabsContent>
         <TabsContent value="insights">
           Insights and analytics content
         </TabsContent>
@@ -234,7 +306,7 @@ const EnhancedFarmerDashboard = () => {
 
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>Sales Performance</CardTitle>
+          <CardTitle>{t.salesPerformance}</CardTitle>
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={300}>
