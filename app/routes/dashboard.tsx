@@ -33,6 +33,7 @@ export default function Dashboard() {
               <a href="/dashboard/inventory">Inventory</a>
               <a href="/dashboard/cropAI">cropAI</a>
               <a href="/dashboard/orders">Orders</a>
+              <a href="/dashboard/wallet">Wallet</a>
               {/* <a href="/dashboard/analytics">Analytics</a>
               <a href="/dashboard/marketplace">Marketplace</a>
               <a href="/dashboard/learning">Learning Center</a>

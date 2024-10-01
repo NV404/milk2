@@ -35,6 +35,7 @@ export const users = pgTable("users", {
   cropsGrown: jsonb("crops_grown"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
+  amountWithdraw: jsonb("amount_withdraw"),
   deletedAt: timestamp("deleted_at"),
 });
 
